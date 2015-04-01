@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -11,7 +12,7 @@ struct three_str
 	string usage;
 };
 
-//void scan(vector<three_str> scantokens, string input);
+void scan(vector<three_str>* scantokens, string input);
 
 
 
@@ -23,59 +24,67 @@ int main(int argc, char const *argv[])
 	
 	
 	vector<three_str> tokens;
+	vector<three_str>* P_tokens;
+	P_tokens = &tokens;
 
 	while(input != "bye")
 	{
 		getline(cin, input);
 		
-			string::size_type position = input.find(' ');
-			three_str sub_string;
-			cout << position << endl;
-			while(position != string::npos)
-			{
+			// string::size_type position = input.find(' ');
+			// three_str sub_string;
+			// cout << position << endl;
+
+			// while(position != string::npos)
+			// {
 				
 
-				sub_string.token = input.substr(0,position);
-				// if (sub_string.token == ("defprompt" || "cd" || "listprocs" || "run" || "assignto" || "<bg>"))
-				// {
-				// 	sub_string.toke_type = "keyword";
-				// }
-				// else if (sub_string.token[0] == '$' || sub_string.token == ("PATH" || "ShowTokens") ) 
-				// {
-				// 	substring.toke_type = "variable";
-				// }
-				// else if (sub_string.token == ("#" || "="))
-				// {
-				// 	sub_string.toke_type = "metaChar";
-				// }
-				// else if (sub_string.token[0] ==  "\"")
-				// {
-				// 	sub_string.toke_type = "string"
-				// }
-				// sub_string.usage = ' ';
+			// 	sub_string.token = input.substr(0,position);
 
-				cout << sub_string.token << endl;
 
-				input.erase(0,position+1);
+			// 	if (sub_string.token == ("defprompt" || "cd" || "listprocs" || "run" || "assignto" || "<bg>"))
+			// 	{
+			// 		sub_string.toke_type = "keyword";
+			// 	}
+			// 	else if (sub_string.token[0] == '$' || sub_string.token == ("PATH" || "ShowTokens") ) 
+			// 	{
+			// 		substring.toke_type = "variable";
+			// 	}
+			// 	else if (sub_string.token == ("#" || "="))
+			// 	{
+			// 		sub_string.toke_type = "metaChar";
+			// 	}
+			// 	else if (sub_string.token[0] ==  "\"")
+			// 	{
+			// 		while(s)
+			// 		sub_string.toke_type = "string"
+			// 	}
+			// 	sub_string.usage = ' ';
+
+			// 	cout << sub_string.token << endl;
+
+			// 	input.erase(0,position+1);
 				
 
-				tokens.push_back(sub_string);
-				position = input.find(' ');
+			// 	tokens.push_back(sub_string);
+			// 	position = input.find(' ');
 				
-			}
+			// }
 
-			sub_string.token = input;
-			tokens.push_back(sub_string);
+			// sub_string.token = input;
+			// tokens.push_back(sub_string);
 
 		
 
 
-//scan(tokens, input);
+		scan(P_tokens, input);
+
 		cout << "after scan" << endl;
 		for (int i = 0; i != tokens.size(); ++i)
 		{
 			string temp_token = tokens[i].token;
-			cout << i << " = " << temp_token << endl;
+			string temp_toke_type = tokens[i].toke_type;
+			cout << i << " = " << temp_token << "=" << temp_toke_type << endl;
 		}
 
 
@@ -86,31 +95,123 @@ int main(int argc, char const *argv[])
 	return 0;
 }
 
-/*scan(vector<three_str> &scantokens, string input)
+void scan(vector<three_str> *scantokens, string input)
 {
 			string::size_type position = input.find(' ');
 			three_str sub_string;
-			cout << position << endl;
+//cout << position << endl;
+			string string_token_bin;
+
+			bool str_flag = false; //activates when beginnig of a string is found
+
 			while(position != string::npos)
 			{
 				
 
 				sub_string.token = input.substr(0,position);
-				sub_string.toke_type = ' ';
-				sub_string.usage = ' ';
 
-				cout << sub_string.token << endl;
+				if(str_flag == false)
+				{
+					if ((sub_string.token == "defprompt") || (sub_string.token == "cd") || (sub_string.token == "listprocs") || (sub_string.token == "run") || (sub_string.token == "assignto") || (sub_string.token == "<bg>"))
+					{
+
+cout << sub_string.token << endl;
+						sub_string.toke_type = "keyword";
+						scantokens->push_back(sub_string);
+						sub_string.usage = ' ';
+					}
+					else if ((sub_string.token[0] == '$') || (sub_string.token == "PATH") || (sub_string.token == "ShowTokens") ) 
+					{
+
+cout << sub_string.token << endl;
+						sub_string.toke_type = "variable";
+						scantokens->push_back(sub_string);
+						sub_string.usage = ' ';
+					}
+					else if ( ( sub_string.token == "#") || (sub_string.token =="=") )
+					{
+						sub_string.toke_type = "metaChar";
+						scantokens->push_back(sub_string);
+						sub_string.usage = ' ';
+					}
+					else if (sub_string.token[0] ==  '"')
+					{
+						str_flag = true;
+						sub_string.token.erase(0,1)
+						string_token_bin = sub_string.token;
+					}
+					else
+					{
+						sub_string.toke_type = "word";
+						scantokens->push_back(sub_string);
+						sub_string.usage = ' ';
+					}
+				}
+				else
+				{
+					string_token_bin += sub_string.token;
+					
+					if( sub_string.token[sub_string.token.size() - 1 ] == '"' )
+					{
+						string_token_bin += sub_string.token;
+						sub_string.token = string_token_bin;
+						sub_string.toke_type = "string";
+						str_flag = false;
+						scantokens->push_back(sub_string);
+						sub_string.usage = ' ';
+						string_token_bin = ' ';
+					}
+				}
+
+
+
+				
+
+				
 
 				input.erase(0,position+1);
 				
 
-				scantokens.push_back(sub_string);
+				
 				position = input.find(' ');
 				
 			}
 
 			sub_string.token = input;
-			scantokens.push_back(sub_string);
+			scantokens->push_back(sub_string);
+//make another function for this at some point--------------------------------------------------------------------
+			if(str_flag == false)
+				{
+					if ((sub_string.token == "defprompt") || (sub_string.token == "cd") || (sub_string.token == "listprocs") || (sub_string.token == "run") || (sub_string.token == "assignto") || (sub_string.token == "<bg>"))
+					{
+						sub_string.toke_type = "keyword";
+					}
+					else if ((sub_string.token[0] == '$') || (sub_string.token == "PATH") || (sub_string.token == "ShowTokens") ) 
+					{
+						sub_string.toke_type = "variable";
+					}
+					else if ( ( sub_string.token == "#") || (sub_string.token =="=") )
+					{
+						sub_string.toke_type = "metaChar";
+					}
+					else if (sub_string.token[0] ==  '"')
+					{
+						str_flag = true;
+						sub_string.toke_type = "string";
+					}
+					else
+					{
+						sub_string.toke_type = "word";
+					}
+				}
+				else
+				{
+					sub_string.toke_type = "string";
+					if( sub_string.token[sub_string.token.size() - 1 ] == '"' )
+					{
+						str_flag = false;
+					}
+				}
 
 			return;
-};*/
+};
