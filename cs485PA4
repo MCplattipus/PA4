@@ -79,13 +79,14 @@ int main(int argc, char const *argv[])
 
 		scan(P_tokens, input);
 
-		cout << "after scan" << endl;
-		for (int i = 0; i != tokens.size(); ++i)
-		{
-			string temp_token = tokens[i].token;
-			string temp_toke_type = tokens[i].toke_type;
-			cout << i << " = " << temp_token << "=" << temp_toke_type << endl;
-		}
+//cout << "after scan" << endl;
+		
+		// for (int i = 0; i != tokens.size(); ++i)
+		// {
+		// 	string temp_token = tokens[i].token;
+		// 	string temp_toke_type = tokens[i].toke_type;
+		// 	cout << i << " = " << temp_token << " = " << temp_toke_type << endl;
+		// }
 
 
 	}
@@ -109,57 +110,70 @@ void scan(vector<three_str> *scantokens, string input)
 				
 
 				sub_string.token = input.substr(0,position);
-
+//cout << sub_string.token << endl;
 				if(str_flag == false)
 				{
 					if ((sub_string.token == "defprompt") || (sub_string.token == "cd") || (sub_string.token == "listprocs") || (sub_string.token == "run") || (sub_string.token == "assignto") || (sub_string.token == "<bg>"))
 					{
 
-cout << sub_string.token << endl;
+
 						sub_string.toke_type = "keyword";
-						scantokens->push_back(sub_string);
 						sub_string.usage = ' ';
+						scantokens->push_back(sub_string);
+						
 					}
 					else if ((sub_string.token[0] == '$') || (sub_string.token == "PATH") || (sub_string.token == "ShowTokens") ) 
 					{
 
-cout << sub_string.token << endl;
+
 						sub_string.toke_type = "variable";
+						sub_string.usage = ' '; 
 						scantokens->push_back(sub_string);
-						sub_string.usage = ' ';
+						
 					}
 					else if ( ( sub_string.token == "#") || (sub_string.token =="=") )
 					{
 						sub_string.toke_type = "metaChar";
-						scantokens->push_back(sub_string);
 						sub_string.usage = ' ';
+						scantokens->push_back(sub_string);
+						
 					}
 					else if (sub_string.token[0] ==  '"')
 					{
 						str_flag = true;
-						sub_string.token.erase(0,1)
+						sub_string.token.erase(sub_string.token.begin());
 						string_token_bin = sub_string.token;
 					}
 					else
 					{
 						sub_string.toke_type = "word";
-						scantokens->push_back(sub_string);
 						sub_string.usage = ' ';
+						scantokens->push_back(sub_string);
 					}
 				}
 				else
 				{
-					string_token_bin += sub_string.token;
-					
+//cout << "in string" << endl;
 					if( sub_string.token[sub_string.token.size() - 1 ] == '"' )
 					{
+						sub_string.token.erase(sub_string.token.end()-1);
+//cout << "last string" << endl;
+
+						string_token_bin += " ";
 						string_token_bin += sub_string.token;
 						sub_string.token = string_token_bin;
 						sub_string.toke_type = "string";
 						str_flag = false;
-						scantokens->push_back(sub_string);
 						sub_string.usage = ' ';
+
+						scantokens->push_back(sub_string);
 						string_token_bin = ' ';
+
+					}
+					else
+					{
+						string_token_bin += " ";
+						string_token_bin += sub_string.token;
 					}
 				}
 
@@ -177,41 +191,80 @@ cout << sub_string.token << endl;
 				
 			}
 
-			sub_string.token = input;
-			scantokens->push_back(sub_string);
+			/*sub_string.token = input;
+
+
 //make another function for this at some point--------------------------------------------------------------------
-			if(str_flag == false)
+				if(str_flag == false)
 				{
 					if ((sub_string.token == "defprompt") || (sub_string.token == "cd") || (sub_string.token == "listprocs") || (sub_string.token == "run") || (sub_string.token == "assignto") || (sub_string.token == "<bg>"))
 					{
+
+cout << sub_string.token << endl;
 						sub_string.toke_type = "keyword";
+						sub_string.usage = ' ';
+						scantokens->push_back(sub_string);
+						
 					}
 					else if ((sub_string.token[0] == '$') || (sub_string.token == "PATH") || (sub_string.token == "ShowTokens") ) 
 					{
+
+cout << sub_string.token << endl;
 						sub_string.toke_type = "variable";
+						sub_string.usage = ' ';
+						scantokens->push_back(sub_string);
+						
 					}
 					else if ( ( sub_string.token == "#") || (sub_string.token =="=") )
 					{
 						sub_string.toke_type = "metaChar";
+						sub_string.usage = ' ';
+						scantokens->push_back(sub_string);
+						
 					}
 					else if (sub_string.token[0] ==  '"')
 					{
 						str_flag = true;
-						sub_string.toke_type = "string";
+						sub_string.token.erase(sub_string.token.begin());
+						string_token_bin = sub_string.token;
 					}
 					else
 					{
 						sub_string.toke_type = "word";
+						sub_string.usage = ' ';
+						scantokens->push_back(sub_string);
+						sub_string.usage = ' ';
 					}
 				}
 				else
 				{
-					sub_string.toke_type = "string";
+					string_token_bin += " ";
+					string_token_bin += sub_string.token;
+					
 					if( sub_string.token[sub_string.token.size() - 1 ] == '"' )
 					{
+						sub_string.token.erase(sub_string.token.end());
+						string_token_bin += " ";
+						string_token_bin += sub_string.token;
+						sub_string.token = string_token_bin;
+						sub_string.toke_type = "string";
 						str_flag = false;
+						sub_string.usage = ' ';
+						scantokens->push_back(sub_string);
+						string_token_bin = ' ';
 					}
 				}
+
+
+
+				
+
+				
+
+
+			scantokens->push_back(sub_string);*/
+
+			
 
 			return;
 };
